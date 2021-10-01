@@ -4,8 +4,11 @@ import { MostDangerousWritingApp as App, LimitType } from './mdwa';
 
 let app: App | undefined;
 
-const minutes = [3, 5, 10, 15, 20, 30, 60].map((n) => `${n} min`);
-const words = [150, 250, 500, 750, 1667].map((n) => `${n} words`);
+const minutes: vscode.QuickPickItem[] = ['3', '5', '10', '15', '20', '30', '60']
+	.map((n) => ({label: n, description: 'minutes'}));
+const words: vscode.QuickPickItem[] = ['150', '250', '500', '750', '1667']
+	.map((n) => ({label: n, description: 'words'}));
+const options = minutes.concat(words);
 
 function startSession() {
 	let type: LimitType;
@@ -14,18 +17,18 @@ function startSession() {
 
 	app?.stop();
 
-	vscode.window.showQuickPick(minutes.concat(words), {
-		placeHolder: 'Select limit:',
+	vscode.window.showQuickPick(options, {
+		placeHolder: 'Set limit',
 		canPickMany: false
 	}).then((s) => {
-		type = s?.endsWith('min') ? 'minutes' : 'words';
-		limit = Number.parseInt(s!, 10);
+		type = s!.description === 'minutes' ? 'minutes' : 'words';
+		limit = Number.parseInt(s!.label, 10);
 
 		vscode.window.showQuickPick(['Off', 'On'], {
 			placeHolder: 'Hard core mode',
 			canPickMany: false
-		}).then((s) => {
-			hardCore = s === 'On';
+		}).then((hc) => {
+			hardCore = hc === 'On';
 
 			vscode.workspace.openTextDocument().then(doc => {
 				vscode.window.showInformationMessage(`type: ${type}, limit: ${limit}, hardcore: ${hardCore}`);
