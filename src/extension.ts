@@ -4,7 +4,7 @@ import { LimitType } from './common';
 
 let app: App | undefined;
 
-const minutes: vscode.QuickPickItem[] = ['1', '3', '5', '10', '15', '20', '30', '60']
+const minutes: vscode.QuickPickItem[] = ['3', '5', '10', '15', '20', '30', '60']
 	.map((n) => ({ label: n, description: 'minutes' }));
 const words: vscode.QuickPickItem[] = ['150', '250', '500', '750', '1667']
 	.map((n) => ({ label: n, description: 'words' }));
@@ -18,6 +18,7 @@ function startSession() {
 		const type = item!.description === 'minutes' ? LimitType.minutes : LimitType.words;
 		const limit = Number.parseInt(item!.label, 10);
 		app = new App(type, limit);
+		vscode.window.showInformationMessage('Start writing');
 	});
 }
 
