@@ -18,7 +18,6 @@ function startSession() {
 		const type = item!.description === 'minutes' ? LimitType.minutes : LimitType.words;
 		const limit = Number.parseInt(item!.label, 10);
 		app = new App(type, limit);
-		vscode.window.showInformationMessage('Start writing');
 	});
 }
 
