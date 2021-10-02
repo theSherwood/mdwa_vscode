@@ -8,7 +8,6 @@ const kill = 5000;
 export enum LimitType { minutes, words }
 
 export class MostDangerousWritingApp {
-  private context: vscode.ExtensionContext;
   private statusBar: StatusBar;
   private editor: Editor;
   private timer: NodeJS.Timer | undefined;
@@ -20,9 +19,7 @@ export class MostDangerousWritingApp {
   private startTime: number;
   private duration: number;
 
-  constructor(context:vscode.ExtensionContext, type: LimitType, limit: number) {
-    this.context = context;
-    
+  constructor(type: LimitType, limit: number) {
     this.type = type;
     this.limit = limit;
 
@@ -30,7 +27,7 @@ export class MostDangerousWritingApp {
     this.startTime = Date.now();
     this.duration = 0;
 
-    this.statusBar = new StatusBar(this, {
+    this.statusBar = new StatusBar({
       limit: limit,
       type: type,
       time: this.startTime,
@@ -39,7 +36,7 @@ export class MostDangerousWritingApp {
       danger: false
     });
 
-    this.editor = new Editor(this.context, this);
+    this.editor = new Editor();
 
     this.timer = setInterval(this.tick.bind(this), 100);
   }
@@ -55,8 +52,12 @@ export class MostDangerousWritingApp {
     return this.run;
   }
 
-  ping() {
+  refresh() {
     this.duration = 0;
+  }
+
+  testDocument(document: vscode.TextDocument) {
+    return this.editor.testDocument(document);
   }
 
   private win() {

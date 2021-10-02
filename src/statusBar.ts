@@ -15,12 +15,9 @@ const danger = new vscode.ThemeColor('statusBarItem.errorBackground');
 
 export class StatusBar {
   private items: Map<string, vscode.StatusBarItem>;
-  private app: App;
 
-  constructor(app: App, status: Status) {
+  constructor(status: Status) {
     const createItem = vscode.window.createStatusBarItem;
-
-    this.app = app;
 
     this.items = new Map();
     this.items.set('title', createItem(vscode.StatusBarAlignment.Left, 9000));
@@ -28,7 +25,11 @@ export class StatusBar {
     this.items.set('words', createItem(vscode.StatusBarAlignment.Left, 7000));
     this.items.set('time', createItem(vscode.StatusBarAlignment.Left, 6000));
 
-    this.items.get('title')!.text = '$(sync~spin) MDWA Running';
+    const title = this.items.get('title')!;
+
+    title.text = '$(sync~spin) MDWA Running';
+    title.command = 'the-most-dangerous-writing-app.stopSession';
+    title.tooltip = 'Stop session';
 
     this.update(status);
     this.show();
