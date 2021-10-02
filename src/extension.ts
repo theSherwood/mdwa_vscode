@@ -9,44 +9,35 @@ const words: vscode.QuickPickItem[] = ['150', '250', '500', '750', '1667']
 	.map((n) => ({label: n, description: 'words'}));
 const limitItems = minutes.concat(words);
 
-function startSession() {
+function startSession(context: vscode.ExtensionContext) {
 	vscode.window.showQuickPick(limitItems, {
 		placeHolder: 'Session length',
 		canPickMany: false
 	}).then((item) => {
 		const type = item!.description === 'minutes' ? LimitType.minutes : LimitType.words;
 		const limit = Number.parseInt(item!.label, 10);
-
-		vscode.window.showQuickPick(['Off', 'On'], {
-			placeHolder: 'Hard core mode',
-			canPickMany: false
-		}).then((hc) => {
-			const hardCore = hc === 'On';
-			
-			app = new App(type, limit, hardCore);
-			app.start();
-		});
+		app = new App(context, type, limit);
 	});
 }
 
 function stopSession() {
-	app?.stop();
+	app?.dispose();
 }
 
-function restartSession() {
+function restartSession(context: vscode.ExtensionContext) {
 	stopSession();
-	startSession();
+	startSession(context);
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('the-most-dangerous-writing-app.startSession', () => {
 		if (app?.isRunning()) {
 			vscode.window.showErrorMessage('The Most Dangerous Writing App is already running', 'Stop', 'New Session')
-				.then((action) => action === 'Stop' ? stopSession() : restartSession());
+				.then((action) => action === 'Stop' ? stopSession() : restartSession(context));
 			return;
 		}
 
-		startSession();
+		startSession(context);
 	});
 
 	context.subscriptions.push(disposable);

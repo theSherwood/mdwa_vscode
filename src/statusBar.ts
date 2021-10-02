@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { LimitType } from './mdwa';
+import { MostDangerousWritingApp as App, LimitType } from './mdwa';
 
 export interface Status {
   limit: number;
@@ -15,9 +15,12 @@ const danger = new vscode.ThemeColor('statusBarItem.errorBackground');
 
 export class StatusBar {
   private items: Map<string, vscode.StatusBarItem>;
+  private app: App;
 
-  constructor(status: Status) {
+  constructor(app: App, status: Status) {
     const createItem = vscode.window.createStatusBarItem;
+
+    this.app = app;
 
     this.items = new Map();
     this.items.set('title', createItem(vscode.StatusBarAlignment.Left, 9000));
@@ -40,7 +43,7 @@ export class StatusBar {
     const words = `$(edit) ${status.words}${target} word${status.words === 1 ? '' : 's'}`;
     this.items.get('words')!.text = words;
 
-    const time = status.type === LimitType.minutes ? 600000 * status.limit - status.time : status.time;
+    const time = status.type === LimitType.minutes ? 60000 * status.limit - status.time : status.time;
     this.items.get('time')!.text = `$(watch) ${this.formatTime(time)}`;
   }
 
