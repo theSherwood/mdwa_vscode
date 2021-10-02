@@ -22,15 +22,9 @@ function startSession() {
 			canPickMany: false
 		}).then((hc) => {
 			const hardCore = hc === 'On';
-
-			vscode.workspace.openTextDocument().then(doc => {
-				vscode.window.showInformationMessage(`type: ${type}, limit: ${limit}, hardcore: ${hardCore}`);
-				
-				vscode.window.showTextDocument(doc);
-
-				app = new App(type, limit, hardCore, doc);
-				app.start();
-			});
+			
+			app = new App(type, limit, hardCore);
+			app.start();
 		});
 	});
 }
