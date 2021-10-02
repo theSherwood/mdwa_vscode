@@ -1,14 +1,5 @@
 import * as vscode from 'vscode';
-import { MostDangerousWritingApp as App, LimitType } from './mdwa';
-
-export interface Status {
-  limit: number;
-  type: LimitType;
-  time: number;
-  words: number;
-  reset: number;
-  danger: boolean;
-}
+import { LimitType, Status } from './common';
 
 const normal = new vscode.ThemeColor('statusBarItem.warningBackground');
 const danger = new vscode.ThemeColor('statusBarItem.errorBackground');
@@ -29,7 +20,7 @@ export class StatusBar {
 
     title.text = '$(sync~spin) MDWA Running';
     title.command = 'the-most-dangerous-writing-app.stopSession';
-    title.tooltip = 'Stop session';
+    title.tooltip = 'Terminate';
 
     this.update(status);
     this.show();
@@ -38,7 +29,7 @@ export class StatusBar {
   update(status: Status) {
     this.useBackgroundColor(status.danger ? danger : normal);
 
-    this.items.get('reset')!.text = `$(trash) Delete in ${status.reset}`;
+    this.items.get('reset')!.text = `$(trash) Deleting everything in ${status.reset} s`;
 
     const target = status.type === LimitType.words ? ` / ${status.limit}` : '';
     const words = `$(edit) ${status.words}${target} word${status.words === 1 ? '' : 's'}`;

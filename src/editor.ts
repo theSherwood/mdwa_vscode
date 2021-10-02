@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { MostDangerousWritingApp as App } from './mdwa';
 
 export class Editor {
   private editor: vscode.TextEditor | undefined;

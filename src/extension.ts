@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import { MostDangerousWritingApp as App, LimitType } from './mdwa';
+import { MostDangerousWritingApp as App } from './mdwa';
+import { LimitType } from './common';
 
 let app: App | undefined;
 
-const minutes: vscode.QuickPickItem[] = ['3', '5', '10', '15', '20', '30', '60']
+const minutes: vscode.QuickPickItem[] = ['1', '3', '5', '10', '15', '20', '30', '60']
 	.map((n) => ({ label: n, description: 'minutes' }));
 const words: vscode.QuickPickItem[] = ['150', '250', '500', '750', '1667']
 	.map((n) => ({ label: n, description: 'words' }));
@@ -22,7 +23,7 @@ function startSession() {
 
 function stopSession() {
 	app?.dispose();
-	vscode.window.showInformationMessage('Writing session stopped');
+	vscode.window.showInformationMessage('Writing session terminated.');
 }
 
 function restartSession() {
@@ -33,8 +34,8 @@ function restartSession() {
 export function activate(context: vscode.ExtensionContext) {
 	const start = vscode.commands.registerCommand('the-most-dangerous-writing-app.startSession', () => {
 		if (app?.isRunning()) {
-			vscode.window.showErrorMessage('The Most Dangerous Writing App is already running', 'Stop', 'New Session')
-				.then((action) => action === 'Stop' ? stopSession() : restartSession());
+			vscode.window.showErrorMessage('The Most Dangerous Writing App is already running', 'Terminate', 'New Session')
+				.then((action) => action === 'Terminate' ? stopSession() : restartSession());
 			return;
 		}
 		startSession();

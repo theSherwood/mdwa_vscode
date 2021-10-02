@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
 import { Editor } from './editor';
 import { StatusBar } from './statusBar';
+import { LimitType } from './common';
 
 const danger = 3000;
 const kill = 5000;
-
-export enum LimitType { minutes, words }
 
 export class MostDangerousWritingApp {
   private statusBar: StatusBar;
@@ -18,6 +17,7 @@ export class MostDangerousWritingApp {
   private run: boolean;
   private startTime: number;
   private duration: number;
+  private words: number;
 
   constructor(type: LimitType, limit: number) {
     this.type = type;
@@ -26,12 +26,13 @@ export class MostDangerousWritingApp {
     this.run = true;
     this.startTime = Date.now();
     this.duration = 0;
+    this.words = 0;
 
     this.statusBar = new StatusBar({
       limit: limit,
       type: type,
       time: this.startTime,
-      words: 0,
+      words: this.words,
       reset: kill,
       danger: false
     });
@@ -61,14 +62,31 @@ export class MostDangerousWritingApp {
   }
 
   private win() {
+    const timeElapsed = new Date(Date.now() - this.startTime);
+    const minutes = timeElapsed.getMinutes();
+    const seconds = timeElapsed.getSeconds();
+
+    const time = this.type === LimitType.minutes
+      ? `${this.limit} min`
+      : `${minutes} min ${seconds} sec`;
+
+    vscode.window.showInformationMessage('Congratulations! ' + 
+      `You have written ${this.words} word${this.words === 1 ? '' : 's'} ` +
+      `in ${time}. ` +
+      'You may save your work now.',
+      'New session')
+      .then(() => vscode.commands.executeCommand('the-most-dangerous-writing-app.startSession'));
+
     this.dispose();
-    vscode.window.showInformationMessage('You win');
   }
 
   private fail() {
+    
+    vscode.window.showErrorMessage('Time is up! All your work has been deleted.', 'New session')
+      .then(() => vscode.commands.executeCommand('the-most-dangerous-writing-app.startSession'));
+
     this.editor.clear();
     this.dispose();
-    vscode.window.showErrorMessage('You fail');
   }
 
   private tick() {
@@ -77,8 +95,8 @@ export class MostDangerousWritingApp {
       return;
     }
 
-    const words = this.editor.getWords();
-    if (this.type === LimitType.words && words >= this.limit) {
+    this.words = this.editor.getWords();
+    if (this.type === LimitType.words && this.words >= this.limit) {
       this.win();
       return;
     }
@@ -94,7 +112,7 @@ export class MostDangerousWritingApp {
       limit: this.limit,
       type: this.type,
       time: Date.now() - this.startTime,
-      words: words,
+      words: this.words,
       reset: Math.ceil((kill - this.duration) / 1000),
       danger: kill - this.duration <= danger
     });
