@@ -11,10 +11,10 @@ const limitItems = minutes.concat(words);
 
 function startSession() {
 	vscode.window.showQuickPick(limitItems, {
-		placeHolder: 'Set limit',
+		placeHolder: 'Session length',
 		canPickMany: false
 	}).then((item) => {
-		const type = item!.description === 'minutes' ? 'minutes' : 'words';
+		const type = item!.description === 'minutes' ? LimitType.minutes : LimitType.words;
 		const limit = Number.parseInt(item!.label, 10);
 
 		vscode.window.showQuickPick(['Off', 'On'], {
