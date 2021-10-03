@@ -8,6 +8,7 @@
 		"url": "https://github.com/CoderYihaoWang"
 	},
 	"version": "0.0.1",
+	"publisher": "YihaoWang",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
