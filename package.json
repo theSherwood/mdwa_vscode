@@ -2,10 +2,21 @@
 	"name": "the-most-dangerous-writing-app",
 	"displayName": "The Most Dangerous Writing App",
 	"description": "Let you delete everything you write for free",
+	"author": {
+		"name": "Yihao Wang",
+		"email": "yesiamyihao@gmail.com",
+		"url": "https://github.com/CoderYihaoWang"
+	},
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/CoderYihaoWang/the-most-dangerous-writing-app-extension"
+	},
+	"icon": "images/icon.png",
+	"license": "MIT",
 	"categories": [
 		"Other"
 	],
