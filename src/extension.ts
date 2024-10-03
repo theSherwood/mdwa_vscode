@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { MostDangerousWritingApp as App } from './mdwa';
-import { LimitType } from './common';
+import { LimitType, startSessionCommand, startSessionWithArgsCommand } from './common';
 
 let app: App | undefined;
 
@@ -10,46 +10,70 @@ const words: vscode.QuickPickItem[] = ['150', '250', '500', '750', '1667']
 	.map((n) => ({ label: n, description: 'words' }));
 const limitItems = minutes.concat(words);
 
-function startSession() {
+function isOpenDocument(doc: vscode.TextDocument) {
+  const tabs: vscode.Tab[] = vscode.window.tabGroups.all.map(tg => tg.tabs).flat();
+  const index = tabs.findIndex(tab => tab.input instanceof vscode.TabInputText && tab.input.uri.path === doc.uri.path);
+	return index !== -1;
+}
+
+function startSessionWithArgs() {
+	const returnEditor = vscode.window.activeTextEditor;
+	const returnSelection = returnEditor?.selection;
 	vscode.window.showQuickPick(limitItems, {
 		placeHolder: 'Session length',
 		canPickMany: false
 	}).then((item) => {
 		const type = item!.description === 'minutes' ? LimitType.minutes : LimitType.words;
 		const limit = Number.parseInt(item!.label, 10);
-		app = new App(type, limit);
+		app = new App(type, limit, returnEditor, returnSelection);
 	});
 }
 
-function stopSession() {
-	app?.dispose();
-	vscode.window.showInformationMessage('Writing session terminated.');
-}
-
-function restartSession() {
-	stopSession();
-	startSession();
+function startSessionWithDefaults() {
+	const returnEditor = vscode.window.activeTextEditor;
+	const returnSelection = returnEditor?.selection;
+	const config = vscode.workspace.getConfiguration('mdwa');
+	const type_string = config.get<string>('type', 'minutes')
+	const limit = config.get<number>('limit', 5);
+	const type = type_string === 'minutes' ? LimitType.minutes : LimitType.words;
+	app = new App(type, limit, returnEditor, returnSelection);
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	const start = vscode.commands.registerCommand('the-most-dangerous-writing-app.startSession', () => {
+	const startWithDefaults = vscode.commands.registerCommand(startSessionCommand, () => {
 		if (app?.isRunning()) {
-			vscode.window.showErrorMessage('The Most Dangerous Writing App is already running', 'Terminate', 'New Session')
-				.then((action) => action === 'Terminate' ? stopSession() : restartSession());
-			return;
+			vscode.window.showErrorMessage('MDWA is already running');
+		} else {
+			startSessionWithDefaults();
 		}
-		startSession();
 	});
 
-	const stop = vscode.commands.registerCommand('the-most-dangerous-writing-app.stopSession', () => {
-		stopSession();
+	const startWithArgs = vscode.commands.registerCommand(startSessionWithArgsCommand, () => {
+		if (app?.isRunning()) {
+			vscode.window.showErrorMessage('MDWA is already running');
+		} else {
+			startSessionWithArgs();
+		}
 	});
 
+	/**
+	 * Update the app session that the user made a meaningful change to the text.
+	 */
 	const refresh = vscode.workspace.onDidChangeTextDocument((event) => {
 		if (app?.testDocument(event.document)) {
 			app.refresh();
 		}
 	});
 
-	context.subscriptions.push(start, stop, refresh);
+	/**
+	 * Dispose the app session if the mdwa editor is closed.
+	 */
+	const abort = vscode.window.onDidChangeVisibleTextEditors((_editors) => {
+		const doc = app?.editor?.editor?.document;
+		if (app?.isRunning() && doc) {
+			if (!isOpenDocument(doc)) app.dispose();
+		}
+	});
+
+	context.subscriptions.push(startWithArgs, startWithDefaults, refresh, abort);
 }

@@ -8,3 +8,6 @@ export interface Status {
   reset: number;
   danger: boolean;
 }
+
+export const startSessionCommand = 'mdwa.startSession';
+export const startSessionWithArgsCommand = 'mdwa.startSessionWithArgs';

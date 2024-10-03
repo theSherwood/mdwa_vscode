@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export class Editor {
-  private editor: vscode.TextEditor | undefined;
+  editor: vscode.TextEditor | undefined;
 
   constructor() {
     vscode.workspace.openTextDocument().then(document => {
@@ -19,6 +19,10 @@ export class Editor {
         builder.delete(new vscode.Range(new vscode.Position(0, 0), lastLine.range.end));
       });
     });
+  }
+
+  getText() {
+    return this.editor!.document.getText();
   }
 
   getWords() {

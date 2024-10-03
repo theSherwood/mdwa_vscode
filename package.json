@@ -1,6 +1,6 @@
 {
-	"name": "the-most-dangerous-writing-app",
-	"displayName": "The Most Dangerous Writing App",
+	"name": "mdwa_vscode",
+	"displayName": "MDWA",
 	"description": "Let you delete everything you write for free",
 	"author": {
 		"name": "Yihao Wang",
@@ -22,14 +22,33 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:the-most-dangerous-writing-app.startSession"
+		"onCommand:mdwa.startSession"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "MDWA Settings",
+			"properties": {
+				"mdwa.type": {
+					"type": "string",
+					"default": "minutes",
+          "enum": ["minutes", "words"]
+				},
+				"mdwa.limit": {
+					"type": "number",
+					"default": 5
+				}
+			}
+		},
 		"commands": [
 			{
-				"command": "the-most-dangerous-writing-app.startSession",
-				"title": "The Most Dangerous Writing App: Start Session"
+				"command": "mdwa.startSession",
+				"title": "MDWA: Start Session"
+			},
+			{
+				"command": "mdwa.startSessionWithArgs",
+				"title": "MDWA: Start Session With Args"
 			}
 		]
 	},
@@ -42,7 +61,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.60.0",
+		"@types/vscode": "^1.67.0",
 		"@types/glob": "^7.1.4",
 		"@types/mocha": "^9.0.0",
 		"@types/node": "14.x",

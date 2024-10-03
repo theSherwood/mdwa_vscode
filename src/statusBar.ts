@@ -19,8 +19,6 @@ export class StatusBar {
     const title = this.items.get('title')!;
 
     title.text = '$(sync~spin) MDWA Running';
-    title.command = 'the-most-dangerous-writing-app.stopSession';
-    title.tooltip = 'Terminate';
 
     this.update(status);
     this.show();
