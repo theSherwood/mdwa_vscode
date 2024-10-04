@@ -6,7 +6,7 @@
     "name": "Adam Sherwood",
     "url": "https://github.com/theSherwood"
   },
-  "version": "0.0.2",
+  "version": "0.1.0",
   "publisher": "thesherwood",
   "engines": {
     "vscode": "^1.67.0"
