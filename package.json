@@ -1,76 +1,84 @@
 {
-	"name": "mdwa_vscode",
-	"displayName": "MDWA",
-	"description": "Let you delete everything you write for free",
-	"author": {
-		"name": "Yihao Wang",
-		"email": "yesiamyihao@gmail.com",
-		"url": "https://github.com/CoderYihaoWang"
-	},
-	"version": "0.0.1",
-	"publisher": "YihaoWang",
-	"engines": {
-		"vscode": "^1.60.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/CoderYihaoWang/the-most-dangerous-writing-app-extension"
-	},
-	"icon": "images/icon.png",
-	"license": "MIT",
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:mdwa.startSession"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "MDWA Settings",
-			"properties": {
-				"mdwa.type": {
-					"type": "string",
-					"default": "minutes",
-          "enum": ["minutes", "words"]
-				},
-				"mdwa.limit": {
-					"type": "number",
-					"default": 5
-				}
-			}
-		},
-		"commands": [
-			{
-				"command": "mdwa.startSession",
-				"title": "MDWA: Start Session"
-			},
-			{
-				"command": "mdwa.startSessionWithArgs",
-				"title": "MDWA: Start Session With Args"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.67.0",
-		"@types/glob": "^7.1.4",
-		"@types/mocha": "^9.0.0",
-		"@types/node": "14.x",
-		"@typescript-eslint/eslint-plugin": "^4.31.1",
-		"@typescript-eslint/parser": "^4.31.1",
-		"eslint": "^7.32.0",
-		"glob": "^7.1.7",
-		"mocha": "^9.1.1",
-		"typescript": "^4.4.3",
-		"@vscode/test-electron": "^1.6.2"
-	}
+  "name": "mdwa",
+  "displayName": "MDWA",
+  "description": "The Most Dangerous Writing App as a vscode extension",
+  "author": {
+    "name": "Adam Sherwood",
+    "url": "https://github.com/theSherwood"
+  },
+  "version": "0.0.2",
+  "publisher": "thesherwood",
+  "engines": {
+    "vscode": "^1.67.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theSherwood/mdwa_vscode"
+  },
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:mdwa.startSession"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "MDWA Settings",
+      "properties": {
+        "mdwa.type": {
+          "type": "string",
+          "default": "minutes",
+          "enum": [
+            "minutes",
+            "words"
+          ]
+        },
+        "mdwa.limit": {
+          "type": "number",
+          "default": 5
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "mdwa.startSession",
+        "title": "MDWA: Start Session"
+      },
+      {
+        "command": "mdwa.startSessionWithArgs",
+        "title": "MDWA: Start Session With Args"
+      }
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 100
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.67.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "@vscode/test-electron": "^1.6.2",
+    "eslint": "^7.32.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.1",
+    "prettier": "^3.3.3",
+    "typescript": "^4.4.3"
+  }
 }

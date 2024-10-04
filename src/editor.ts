@@ -4,8 +4,8 @@ export class Editor {
   editor: vscode.TextEditor | undefined;
 
   constructor() {
-    vscode.workspace.openTextDocument().then(document => {
-        vscode.window.showTextDocument(document).then((editor) => {
+    vscode.workspace.openTextDocument().then((document) => {
+      vscode.window.showTextDocument(document).then((editor) => {
         this.editor = editor;
       });
     });
@@ -15,7 +15,7 @@ export class Editor {
     vscode.window.showTextDocument(this.editor!.document).then((editor) => {
       this.editor = editor;
       const lastLine = editor!.document.lineAt(editor!.document.lineCount - 1);
-      editor.edit((builder) => {   
+      editor.edit((builder) => {
         builder.delete(new vscode.Range(new vscode.Position(0, 0), lastLine.range.end));
       });
     });

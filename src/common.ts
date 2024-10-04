@@ -1,4 +1,7 @@
-export enum LimitType { minutes, words }
+export enum LimitType {
+  minutes,
+  words,
+}
 
 export interface Status {
   limit: number;

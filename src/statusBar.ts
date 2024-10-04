@@ -33,7 +33,8 @@ export class StatusBar {
     const words = `$(edit) ${status.words}${target} word${status.words === 1 ? '' : 's'}`;
     this.items.get('words')!.text = words;
 
-    const time = status.type === LimitType.minutes ? 60000 * status.limit - status.time : status.time;
+    const time =
+      status.type === LimitType.minutes ? 60000 * status.limit - status.time : status.time;
     this.items.get('time')!.text = `$(watch) ${this.formatTime(time)}`;
   }
 
